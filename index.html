@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="class.js"></script>
+    <script src="js/core.js"></script>
     <style>
-      .u4{
+      .u4 {
         margin-right: 10px;
         display: inline-block;
       }
-      .u4 div{
+      .u4 div {
         width: 8px;
         height: 11px;
         display: inline-block;
@@ -22,40 +22,48 @@
         console.log(file.value);
         var reader = new FileReader();
         reader.readAsArrayBuffer(file.files[0]);
-        reader.onload = function() {
-          var data = this.result; 
+        reader.onload = function () {
+          var data = this.result;
           var arr = new Uint8Array(data);
           showBytes(arr);
           showClass(arr);
         };
       }
 
-      function showClass(arr){
+      function showClass(arr) {
         let cr = new ClassReader(arr);
-        let c = cr.readClass();
-        console.log(c.toString());
+        let c = new ClassEntry();
+        c.readInfo(cr);
+        window.c = c;
       }
-      
-      function showBytes(arr){
+
+      function showBytes(arr) {
         var bytesDoc = document.getElementById("bytes");
         bytesDoc.innerHTML = "";
         var html = "<div class='u4'>";
-        for(var i=0;i<arr.length;i++){
-          html+=toHex(arr[i])
-          if(i%4==3){
+        for (var i = 0; i < arr.length; i++) {
+          html += toHex(arr[i]);
+          if (i % 4 == 3) {
             html += "</div><div class='u4'>";
           }
         }
-        html +="</div>";
+        html += "</div>";
         bytesDoc.innerHTML = html;
       }
 
-      function toHex(val){
+      function toHex(val) {
         var str = val.toString(16).toUpperCase();
-        if(str.length==1)return "<div class='u1'>0</div><div class='u1'>"+str+"</div>";
-        return "<div class='u1'>"+str[0]+"</div>"+"<div class='u1'>"+str[1]+"</div>";
+        if (str.length == 1)
+          return "<div class='u1'>0</div><div class='u1'>" + str + "</div>";
+        return (
+          "<div class='u1'>" +
+          str[0] +
+          "</div>" +
+          "<div class='u1'>" +
+          str[1] +
+          "</div>"
+        );
       }
-
     </script>
   </head>
   <body>
@@ -63,8 +71,6 @@
     <input type="file" id="file" />
     <button onclick="parseFile()">解析</button>
     <div id=""></div>
-    <div id="bytes">
-
-    </div>
+    <div id="bytes"></div>
   </body>
 </html>
